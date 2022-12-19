@@ -1,5 +1,5 @@
 import torch.nn as nn
-from torch._six import container_abcs
+import collections.abc as container_abcs
 
 from .. import utils
 from ..utils import _image_shape, _matrix_shape, _pointset_shape

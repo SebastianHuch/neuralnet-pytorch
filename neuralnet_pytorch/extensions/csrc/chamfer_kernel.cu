@@ -1,6 +1,6 @@
 #include <ATen/ATen.h>
-#include <THC/THC.h>
 #include <THC/THCAtomics.cuh>
+#include <c10/cuda/CUDACachingAllocator.h>
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <torch/extension.h>
@@ -158,7 +158,7 @@ chamfer_cuda_forward(at::Tensor xyz1, at::Tensor xyz2)
         batch_size, m, xyz2.data<scalar_t>(), n, xyz1.data<scalar_t>(),
         dist2.data<scalar_t>(), idx2.data<scalar_t>());
     }));
-  THCudaCheck(cudaGetLastError());
+  C10_CUDA_CHECK(cudaGetLastError());
 
   return { dist1, dist2, idx1, idx2 };
 }
@@ -215,7 +215,7 @@ chamfer_cuda_backward(at::Tensor xyz1, at::Tensor xyz2, at::Tensor graddist1,
         graddist2.data<scalar_t>(), idx2.data<scalar_t>(),
         gradxyz2.data<scalar_t>(), gradxyz1.data<scalar_t>());
     }));
-  THCudaCheck(cudaGetLastError());
+  C10_CUDA_CHECK(cudaGetLastError());
 
   return { gradxyz1, gradxyz2 };
 }
